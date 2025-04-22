@@ -1,22 +1,27 @@
-import { useState } from "react";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
-import { TaskList } from "./components/TaskList";
-import { AddTask } from "./components/AddTask";
+import { useEffect, useState } from 'react';
+
+import { Header } from './components/Header';
+import { AddTask } from './components/AddTask';
+import { ShowTask } from './components/ShowTask';
+
 import './App.css';
 
 
-function App() {
-  const [tasks, setTasks] = useState([]);
+function App() {  
+  const [tasklist, setTaskList] = useState(localStorage.getItem("tasklist") ? JSON.parse(localStorage.getItem("tasklist")) : []);  
+  const [task, setTask] = useState({ id: "", name: "", time: "" });
+
+  useEffect(() => {
+    localStorage.setItem("tasklist", JSON.stringify(tasklist));
+  }
+  , [tasklist]);
+
 
   return (
     <div className="App">
-      <Header />
-      <main>
-        <AddTask tasks={tasks} setTasks={setTasks} />
-        <TaskList tasks={tasks} setTasks={setTasks} />
-      </main>
-      <Footer />
+    <Header />
+    <AddTask tasklist={tasklist} setTaskList={setTaskList} task={task} setTask={setTask} />
+    <ShowTask tasklist={tasklist} setTaskList={setTaskList} task={task} setTask={setTask} />
     </div>
   );
 }
